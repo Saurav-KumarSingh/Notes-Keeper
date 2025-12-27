@@ -1,6 +1,7 @@
 package saurav.com.example.backend.service;
 
 import org.jspecify.annotations.Nullable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -48,8 +49,8 @@ public class NoteService {
 
 //    // ✅ GET LOGGED-IN USER NOTES
 public List<NoteResponse> getMyNotes() {
-    var email = SecurityContextHolder.getContext().getAuthentication().getName();
-    var user = userRepository.findByEmail(email).orElseThrow();
+    String email = SecurityContextHolder.getContext().getAuthentication().getName();
+    User user = userRepository.findByEmail(email).orElseThrow();
     return noteRepository.findByUser(user)
             .stream()
             .map(n -> new NoteResponse(
@@ -61,5 +62,23 @@ public List<NoteResponse> getMyNotes() {
 
 }
 
+
+    public ResponseEntity<?> deleteMyNote(Long noteId) {
+
+        String email = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Note note = noteRepository.findByIdAndUser(noteId, user)
+                .orElseThrow(() -> new RuntimeException("Note not found or not yours"));
+
+        noteRepository.delete(note);
+
+        return ResponseEntity.ok("Note deleted successfully!");
+    }
 
 }
