@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import saurav.com.example.backend.dto.NoteRequest;
+import saurav.com.example.backend.dto.NoteResponse;
 import saurav.com.example.backend.entity.Note;
 import saurav.com.example.backend.service.NoteService;
 
@@ -19,7 +20,7 @@ public class NoteController {
             @RequestBody NoteRequest request) {
 
         Note note = noteService.createNote(request);
-        return ResponseEntity.ok(note);
+        return ResponseEntity.ok("Note created successfully!");
     }
 
 //    @GetMapping
