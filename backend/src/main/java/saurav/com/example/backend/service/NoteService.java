@@ -25,60 +25,100 @@ public class NoteService {
         this.userRepository = userRepository;
     }
 
-    // ✅ CREATE NOTE (email from JWT)
+    // ✅ CREATE NOTE
     public Note createNote(NoteRequest request) {
+        try {
+            Authentication authentication =
+                    SecurityContextHolder.getContext().getAuthentication();
 
-        Authentication authentication =
-                SecurityContextHolder.getContext().getAuthentication();
+            String email = authentication.getName();
 
-        String email = authentication.getName(); // email from JWT
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
 
-        System.out.println(email);
+            Note note = new Note();
+            note.setContent(request.getContent());
+            note.setUser(user);
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+            return noteRepository.save(note);
 
-        Note note = new Note();
-        note.setContent(request.getContent());
-        note.setUser(user);
-
-        return noteRepository.save(note);
+        } catch (Exception e) {
+            throw new RuntimeException("Error creating note: " + e.getMessage());
+        }
     }
 
+    // ✅ GET LOGGED-IN USER NOTES
+    public List<NoteResponse> getMyNotes() {
+        try {
+            String email = SecurityContextHolder
+                    .getContext()
+                    .getAuthentication()
+                    .getName();
 
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow();
 
-//    // ✅ GET LOGGED-IN USER NOTES
-public List<NoteResponse> getMyNotes() {
-    String email = SecurityContextHolder.getContext().getAuthentication().getName();
-    User user = userRepository.findByEmail(email).orElseThrow();
-    return noteRepository.findByUser(user)
-            .stream()
-            .map(n -> new NoteResponse(
-                    n.getId(),
-                    n.getContent(),
-                    n.getCreatedAt()
-            ))
-            .toList();
+            return noteRepository.findByUser(user)
+                    .stream()
+                    .map(n -> new NoteResponse(
+                            n.getId(),
+                            n.getContent(),
+                            n.getCreatedAt()
+                    ))
+                    .toList();
 
-}
+        } catch (Exception e) {
+            throw new RuntimeException("Error fetching notes: " + e.getMessage());
+        }
+    }
 
-
+    // ✅ DELETE NOTE
     public ResponseEntity<?> deleteMyNote(Long noteId) {
+        try {
+            String email = SecurityContextHolder
+                    .getContext()
+                    .getAuthentication()
+                    .getName();
 
-        String email = SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getName();
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+            Note note = noteRepository.findByIdAndUser(noteId, user)
+                    .orElseThrow(() -> new RuntimeException("Note not found or not yours"));
 
-        Note note = noteRepository.findByIdAndUser(noteId, user)
-                .orElseThrow(() -> new RuntimeException("Note not found or not yours"));
+            noteRepository.delete(note);
 
-        noteRepository.delete(note);
+            return ResponseEntity.ok("Note deleted successfully!");
 
-        return ResponseEntity.ok("Note deleted successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
+    // ✅ UPDATE NOTE (PATCH)
+    public ResponseEntity<?> updateNote(Long noteId, NoteRequest request) {
+        try {
+            String email = SecurityContextHolder
+                    .getContext()
+                    .getAuthentication()
+                    .getName();
+
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            Note note = noteRepository.findByIdAndUser(noteId, user)
+                    .orElseThrow(() -> new RuntimeException("Note not found or not yours"));
+
+            if (request.getContent() != null) {
+                note.setContent(request.getContent());
+            }
+
+            noteRepository.save(note);
+
+            return ResponseEntity.ok("note updated successfully!");
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

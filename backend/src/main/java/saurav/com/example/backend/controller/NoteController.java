@@ -36,5 +36,16 @@ public class NoteController {
 //        return ResponseEntity.ok("Note deleted successfully");
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> updateNote(
+            @PathVariable Long id,
+            @RequestBody NoteRequest request) {
+
+        return noteService.updateNote(id, request);
+    }
+
+
+
+
 }
 
