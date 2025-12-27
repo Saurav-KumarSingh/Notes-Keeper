@@ -23,13 +23,10 @@ public class NoteController {
         return ResponseEntity.ok("Note created successfully!");
     }
 
-//    @GetMapping
-//    public ResponseEntity<?> getMyNotes(
-//            @AuthenticationPrincipal UserDetails userDetails) {
-//
-//        // get userId from email
-//        // return user's notes
-//        return ResponseEntity.ok("User notes");
-//    }
+    @GetMapping
+    public ResponseEntity<?> getMyNotes() {
+
+        return ResponseEntity.ok(noteService.getMyNotes());
+    }
 }
 
