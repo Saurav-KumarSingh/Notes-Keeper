@@ -9,7 +9,12 @@ const Home = () => {
       <Navbar />
 
       <div className="min-h-screen bg-gray-100 p-6">
-        <Editor />
+        {/* <Editor /> */}
+        <NoteList/>
+      </div>
+
+      <div>
+        
       </div>
 
     </div>

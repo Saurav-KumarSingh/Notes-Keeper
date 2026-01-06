@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import saurav.com.example.backend.dto.NoteRequest;
-import saurav.com.example.backend.dto.NoteResponse;
 import saurav.com.example.backend.entity.Note;
 import saurav.com.example.backend.service.NoteService;
 

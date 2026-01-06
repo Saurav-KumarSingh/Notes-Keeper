@@ -14,14 +14,14 @@ const NoteCard = ({ content, createdAt, onEdit, onDelete }) => {
         <div className="flex gap-2">
           <button
             onClick={onEdit}
-            className="px-3 py-1 text-xs rounded-md bg-blue-50 text-blue-600 hover:bg-blue-100"
+            className="cursor-pointer px-3 py-1 text-xs rounded-md bg-blue-50 text-blue-600 hover:bg-blue-100"
           >
             ✏️ Edit
           </button>
 
           <button
             onClick={onDelete}
-            className="px-3 py-1 text-xs rounded-md bg-red-50 text-red-600 hover:bg-red-100"
+            className="cursor-pointer px-3 py-1 text-xs rounded-md bg-red-50 text-red-600 hover:bg-red-100"
           >
             🗑️ Delete
           </button>

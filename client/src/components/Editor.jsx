@@ -1,49 +1,43 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import EditorJS from "@editorjs/editorjs";
 import Header from "@editorjs/header";
 import List from "@editorjs/list";
 import Paragraph from "@editorjs/paragraph";
 
-const Editor = () => {
+const EditorModal = ({ isOpen, onClose, content }) => {
   const editorRef = useRef(null);
-  const [htmlOutput, setHtmlOutput] = useState("");
 
   useEffect(() => {
-    if (!editorRef.current) {
+    if (isOpen && !editorRef.current) {
       editorRef.current = new EditorJS({
-        holder: "editorjs",
+        holder: "editorjs-modal",
         autofocus: true,
-        placeholder: "Start writing your note...",
-        tools: {
-          header: {
-            class: Header,
-            inlineToolbar: true,
-            config: {
-              levels: [1, 2, 3, 4],
-              defaultLevel: 2,
+        data: {
+          blocks: [
+            {
+              type: "paragraph",
+              data: { text: content || "" },
             },
-          },
-          list: {
-            class: List,
-            inlineToolbar: true,
-          },
-          paragraph: {
-            class: Paragraph,
-          },
+          ],
+        },
+        tools: {
+          header: { class: Header, inlineToolbar: true },
+          list: { class: List, inlineToolbar: true },
+          paragraph: { class: Paragraph },
         },
       });
     }
 
     return () => {
-      if (editorRef.current?.destroy) {
+      if (!isOpen && editorRef.current) {
         editorRef.current.destroy();
         editorRef.current = null;
       }
     };
-  }, []);
+  }, [isOpen, content]);
 
-  // 🔥 Convert EditorJS blocks → HTML
-  const convertToHTML = (blocks) => {
+  // 🔥 Convert EditorJS → FULL HTML
+  const blocksToHTML = (blocks) => {
     return blocks
       .map((block) => {
         switch (block.type) {
@@ -54,18 +48,13 @@ const Editor = () => {
             return `<p>${block.data.text}</p>`;
 
           case "list":
-            if (block.data.style === "ordered") {
-              return `
-                <ol>
-                  ${block.data.items.map((item) => `<li>${item}</li>`).join("")}
-                </ol>
-              `;
-            }
+            { const tag = block.data.style === "ordered" ? "ol" : "ul";
+            
             return `
-              <ul>
-                ${block.data.items.map((item) => `<li>${item}</li>`).join("")}
-              </ul>
-            `;
+              <${tag}>
+                ${block.data.items.map((i) => `<li>${i}</li>`).join("")}
+              </${tag}>
+            `; }
 
           default:
             return "";
@@ -76,52 +65,54 @@ const Editor = () => {
 
   const handleSave = async () => {
     const data = await editorRef.current.save();
-    const html = convertToHTML(data.blocks);
+    const html = blocksToHTML(data.blocks);
 
-    console.log("Generated HTML 👉", html);
-    setHtmlOutput(html);
+    // ✅ THIS IS WHAT YOU WANT
+    console.log("🧾 FULL EDITOR HTML 👇");
+    console.log(html);
+
+    onClose();
   };
 
+  if (!isOpen) return null;
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 p-6">
-      <div className="mx-auto max-w-4xl rounded-xl bg-white shadow-lg">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+      <div className="w-full max-w-3xl rounded-xl bg-white shadow-lg">
         {/* Header */}
         <div className="flex items-center justify-between border-b px-6 py-4">
-          <h2 className="text-xl font-semibold text-gray-800">
-            📝 Create Note
-          </h2>
-          <button
-            onClick={handleSave}
-            className="rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-blue-700 active:scale-95"
-          >
-            💾 Save
+          <h2 className="text-lg font-semibold">✏️ Edit Note</h2>
+          <button onClick={onClose} className="text-gray-500 hover:text-black">
+            ✕
           </button>
         </div>
 
         {/* Editor */}
         <div className="p-6">
           <div
-            id="editorjs"
-            className="min-h-[320px] rounded-lg border border-gray-300 bg-gray-50 p-4 focus:outline-none"
+            id="editorjs-modal"
+            className="min-h-[320px] rounded-lg border bg-gray-50 p-4"
           />
         </div>
 
-        {/* HTML Preview */}
-        {htmlOutput && (
-          <div className="border-t bg-gray-50 p-6">
-            <h3 className="mb-3 text-lg font-semibold text-gray-700">
-              📄 Generated HTML Preview
-            </h3>
-
-            <div
-              className="prose max-w-none rounded-md border bg-white p-4"
-              dangerouslySetInnerHTML={{ __html: htmlOutput }}
-            />
-          </div>
-        )}
+        {/* Footer */}
+        <div className="flex justify-end gap-3 border-t px-6 py-4">
+          <button
+            onClick={onClose}
+            className="rounded-md border px-4 py-2 text-sm"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleSave}
+            className="rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
+          >
+            Save
+          </button>
+        </div>
       </div>
     </div>
   );
 };
 
-export default Editor;
+export default EditorModal;
