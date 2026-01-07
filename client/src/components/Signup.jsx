@@ -95,6 +95,7 @@ export default function Signup() {
               type="email"
               name="email"
               required
+              autoComplete="new-email"
               value={formData.email}
               onChange={handleChange}
               placeholder="notekeeper@gmail.com"
@@ -109,6 +110,7 @@ export default function Signup() {
             <input
               type="password"
               name="password"
+              autoComplete="new-password"
               required
               value={formData.password}
               onChange={handleChange}

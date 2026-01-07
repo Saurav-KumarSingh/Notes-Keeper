@@ -1,6 +1,5 @@
 package saurav.com.example.backend.service;
 
-import org.jspecify.annotations.Nullable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -58,7 +57,7 @@ public class NoteService {
             User user = userRepository.findByEmail(email)
                     .orElseThrow();
 
-            return noteRepository.findByUser(user)
+            return noteRepository.findAllByUser(user)
                     .stream()
                     .map(n -> new NoteResponse(
                             n.getId(),

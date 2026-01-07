@@ -84,6 +84,7 @@ export default function Login() {
             <input
               type="email"
               name="email"
+              autoComplete="new-email"
               required
               value={formData.email}
               onChange={handleChange}
@@ -100,6 +101,7 @@ export default function Login() {
             <input
               type="password"
               name="password"
+              autoComplete="current-password"
               required
               value={formData.password}
               onChange={handleChange}
