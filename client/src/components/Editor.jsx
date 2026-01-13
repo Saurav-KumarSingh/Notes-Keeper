@@ -4,7 +4,7 @@ import Header from "@editorjs/header";
 import List from "@editorjs/list";
 import Paragraph from "@editorjs/paragraph";
 
-const EditorModal = ({ isOpen, onClose, content }) => {
+const EditorModal = ({ isOpen, onClose, content, onSave }) => {
   const editorRef = useRef(null);
 
   useEffect(() => {
@@ -37,8 +37,8 @@ const EditorModal = ({ isOpen, onClose, content }) => {
   }, [isOpen, content]);
 
   // 🔥 Convert EditorJS → FULL HTML
-  const blocksToHTML = (blocks) => {
-    return blocks
+  const blocksToHTML = (blocks) =>
+    blocks
       .map((block) => {
         switch (block.type) {
           case "header":
@@ -47,29 +47,28 @@ const EditorModal = ({ isOpen, onClose, content }) => {
           case "paragraph":
             return `<p>${block.data.text}</p>`;
 
-          case "list":
-            { const tag = block.data.style === "ordered" ? "ol" : "ul";
-            
-            return `
-              <${tag}>
-                ${block.data.items.map((i) => `<li>${i}</li>`).join("")}
-              </${tag}>
-            `; }
+          case "list": {
+            const tag = block.data.style === "ordered" ? "ol" : "ul";
+            return `<${tag}>${block.data.items
+              .map((i) => `<li>${i}</li>`)
+              .join("")}</${tag}>`;
+          }
 
           default:
             return "";
         }
       })
       .join("");
-  };
 
+  // ✅ Save button
   const handleSave = async () => {
+    if (!editorRef.current) return;
+
     const data = await editorRef.current.save();
     const html = blocksToHTML(data.blocks);
 
-    // ✅ THIS IS WHAT YOU WANT
-    console.log("🧾 FULL EDITOR HTML 👇");
-    console.log(html);
+    // -> to parent
+    onSave(html);
 
     onClose();
   };
@@ -95,7 +94,7 @@ const EditorModal = ({ isOpen, onClose, content }) => {
           />
         </div>
 
-        {/* Footer */}
+        {/* Footer (UNCHANGED UI) */}
         <div className="flex justify-end gap-3 border-t px-6 py-4">
           <button
             onClick={onClose}
