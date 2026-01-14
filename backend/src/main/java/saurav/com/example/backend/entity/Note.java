@@ -18,6 +18,7 @@ public class Note {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Lob
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)

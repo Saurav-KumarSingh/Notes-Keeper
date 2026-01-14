@@ -1,4 +1,7 @@
 const Navbar = () => {
+
+  
+
   return (
     <div className="flex-1 flex flex-col">
       <header className="bg-white shadow-md p-4 flex justify-between items-center sticky top-0 z-50">

@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const API_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function Login() {
   const navigate = useNavigate();
@@ -31,9 +30,8 @@ export default function Login() {
       );
 
       toast.success("Login successful 🎉");
-      console.log(response.data)
 
-      // Optional: save token
+      
       if (response.data?.jwt) {
         localStorage.setItem("token", response.data.jwt);
       }
@@ -113,7 +111,7 @@ export default function Login() {
 
           <button
             type="submit"
-            className="w-full mt-2 py-3 sm:py-3.5 rounded-2xl
+            className="cursor-pointer w-full mt-2 py-3 sm:py-3.5 rounded-2xl
             font-semibold text-white
             bg-gradient-to-r from-indigo-500 to-blue-600"
           >

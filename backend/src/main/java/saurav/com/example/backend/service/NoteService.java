@@ -95,7 +95,7 @@ public class NoteService {
     }
 
     // ✅ UPDATE NOTE (PATCH)
-    // ✅ UPDATE NOTE (PATCH)
+
     public ResponseEntity<?> updateNote(Long noteId, NoteRequest request) {
         try {
             String email = SecurityContextHolder
@@ -115,8 +115,13 @@ public class NoteService {
 
             Note updatedNote = noteRepository.save(note);
 
-            // ✅ RETURN UPDATED NOTE
-            return ResponseEntity.ok(updatedNote);
+            NoteResponse response = new NoteResponse(
+                    updatedNote.getId(),
+                    updatedNote.getContent(),
+                    updatedNote.getCreatedAt()
+            );
+
+            return ResponseEntity.ok(response);
 
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

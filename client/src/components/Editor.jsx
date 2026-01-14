@@ -81,7 +81,7 @@ const EditorModal = ({ isOpen, onClose, content, onSave }) => {
         {/* Header */}
         <div className="flex items-center justify-between border-b px-6 py-4">
           <h2 className="text-lg font-semibold">✏️ Edit Note</h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-black">
+          <button onClick={onClose} className="cursor-pointer text-gray-500 hover:text-black hover:animate-pulse hover:scale-120">
             ✕
           </button>
         </div>
@@ -98,13 +98,13 @@ const EditorModal = ({ isOpen, onClose, content, onSave }) => {
         <div className="flex justify-end gap-3 border-t px-6 py-4">
           <button
             onClick={onClose}
-            className="rounded-md border px-4 py-2 text-sm"
+            className="cursor-pointer rounded-md border px-4 py-2 text-sm hover:bg-red-400 hover:text-white"
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
-            className="rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
+            className="cursor-pointer rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
           >
             Save
           </button>

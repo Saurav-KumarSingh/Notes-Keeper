@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import NoteCard from "./NoteCard";
 import EditorModal from "./Editor";
+import { toast } from "react-toastify";
 
 const NoteList = () => {
   const [notes, setNotes] = useState([]);
-  const [isOpen, setIsOpen] = useState(false);
   const [activeNote, setActiveNote] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const token = localStorage.getItem("token");
@@ -15,30 +16,25 @@ const NoteList = () => {
     fetchNotes();
   }, []);
 
-  // ✅ Fetch Notes
   const fetchNotes = async () => {
     try {
       const res = await axios.get(
         `${import.meta.env.VITE_API_URL}/api/notes`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       setNotes(res.data);
-    } catch (err) {
-      console.error("Error fetching notes", err);
+    } catch {
+      toast.error("Failed to fetch notes");
     } finally {
       setLoading(false);
     }
   };
 
-  // ✅ Edit (FIXED)
   const handleEdit = (note) => {
     setActiveNote(note);
     setIsOpen(true);
   };
 
-  // ✅ Save (FULL HTML)
   const handleSave = async (html) => {
     try {
       const res = await axios.patch(
@@ -47,33 +43,25 @@ const NoteList = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      // ✅ res.data is FULL updated note
-      setNotes(prev =>
-        prev.map(n => (n.id === activeNote.id ? res.data : n))
-      );
-
+      setNotes(prev => prev.map(n => n.id === activeNote.id ? res.data : n));
+      toast.success("Note updated successfully 🎉");
       setIsOpen(false);
       setActiveNote(null);
-    } catch (err) {
-      console.error("Update failed", err);
+    } catch {
+      toast.error("Update failed");
     }
   };
 
-
-  // ✅ Delete (Axios handled correctly)
   const handleDelete = async (id) => {
     try {
       await axios.delete(
         `${import.meta.env.VITE_API_URL}/api/notes/${id}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-
-      // remove from UI instantly
-      setNotes((prev) => prev.filter((n) => n.id !== id));
-    } catch (err) {
-      console.error("Delete failed", err);
+      setNotes(prev => prev.filter(n => n.id !== id));
+      toast.success("Note deleted successfully 🎉");
+    } catch {
+      toast.error("Delete failed");
     }
   };
 
@@ -82,22 +70,21 @@ const NoteList = () => {
   return (
     <>
       <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-        {notes.map((note, index) => (
+        {notes.map(note => (
           <NoteCard
-            key={note.id ?? index}
+            key={note.id}
             note={note}
             onEdit={handleEdit}
             onDelete={handleDelete}
           />
         ))}
-
       </div>
 
       <EditorModal
         isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        onSave={handleSave}
+        onClose={() => { setIsOpen(false); setActiveNote(null); }}
         content={activeNote?.content || ""}
+        onSave={handleSave}
       />
     </>
   );
