@@ -40,12 +40,16 @@ public class AuthService {
                     .body("Error: Email is already in use!");
         }
 
+        String url="https://api.dicebear.com/9.x/bottts-neutral/svg?seed="+ request.getEmail()+"&radius=4";
+
         // 1️⃣ Create user
         User user = new User();
         user.setEmail(request.getEmail());
         user.setName(request.getName());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(Role.USER);
+        user.setProfileImage(url);
+
 
         userRepository.save(user);
 

@@ -36,6 +36,8 @@ public class User implements UserDetails {
 
     private String password;
 
+    private String profileImage;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role = Role.USER;
