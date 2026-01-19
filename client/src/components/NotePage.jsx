@@ -13,6 +13,7 @@ const NotesPage = () => {
         <NoteList />
       </div>
 
+      
       <AddButton />
     </div>
   );

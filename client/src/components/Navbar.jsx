@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const Navbar = () => {
   const [user, setUser] = useState(null);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
-  const navigate=useNavigate()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -117,7 +117,17 @@ const Navbar = () => {
                 </svg>
                 <div className="flex justify-between px-1">
                   <button onClick={handleLogout} className="z-10 cursor-pointer px-3 py-1 text-xs rounded-md bg-red-50 text-red-600 hover:bg-red-100 transition">logout</button>
-                  <button className="z-10 cursor-pointer px-3 py-1 text-xs rounded-md bg-blue-50 text-blue-600 hover:bg-blue-100 transition">✏️edit</button>
+                  <Link
+                    to="/notes-keeper/edit"
+                    state={{
+                      name: user?.name,
+                      email: user?.email,
+                    }}
+                    className="z-10 cursor-pointer px-3 py-1 text-xs rounded-md bg-blue-50 text-blue-600 hover:bg-blue-100 transition"
+                  >
+                    ✏️ edit
+                  </Link>
+
                 </div>
               </div>
 
