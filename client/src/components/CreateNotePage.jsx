@@ -18,7 +18,7 @@ const CreateNotePage = () => {
       );
 
       toast.success("Note created successfully 🎉");
-      navigate("/notes-keeper"); // This remounts NotesPage, so NoteList fetches again
+      navigate("/notes-keeper"); 
 
     } catch (err) {
       toast.error("Note creation failed",err);

@@ -51,13 +51,13 @@ export default function Signup() {
 
   return (
     <div className="min-h-screen flex items-center justify-center
-      bg-gradient-to-br from-[#f5f7fa] via-[#ffffff] to-[#eef2ff]
+      bg-gradient-to-br from-[#797bf4] via-[#ffffff] to-[#eef2ff]
       px-4 sm:px-6 lg:px-8">
 
       <div className="relative w-full max-w-md sm:max-w-lg
         rounded-3xl bg-white/80 backdrop-blur-xl
         shadow-[0_25px_70px_rgba(0,0,0,0.12)]
-        border border-gray-100 p-6 sm:p-8">
+        border border-gray-100 p-6 sm:p-8 hover:shadow-2xl">
 
         <div className="absolute top-0 left-6 right-6 sm:left-10 sm:right-10
           h-[3px] rounded-full bg-gradient-to-r from-indigo-500 to-blue-500" />
@@ -118,14 +118,18 @@ export default function Signup() {
               className="mt-1 w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200"
             />
           </div>
+    
+
+          
 
           <button
             type="submit"
             className="w-full mt-2 py-3 rounded-2xl
             font-semibold text-white
-            bg-gradient-to-r from-indigo-500 to-blue-600 cursor-pointer"
+            bg-linear-to-r from-indigo-500 to-blue-600 cursor-pointer"
           >
-            Create Your Workspace ✨
+            {loading ? "Signing you up..." : "Create your workspace ✨"}
+            
           </button>
         </form>
 
