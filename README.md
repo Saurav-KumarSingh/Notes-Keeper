@@ -28,10 +28,11 @@
 ## 📸 Screenshots
 
 <p align="center">
-  <img src="./screenshots/signup.png" alt="Homepage" width="45%" height="250px" style="margin: 20px; object-fit: cover;" />
-  <img src="./screenshots/login.png" alt="Auth Page" width="45%" height="250px" style="margin: 20px; object-fit: cover;" />
+  <img src="./screenshots/signup.png" alt="Regiter" width="45%" height="250px" style="margin: 20px; object-fit: cover;" />
+  <img src="./screenshots/login.png" alt="Login" width="45%" height="250px" style="margin: 20px; object-fit: cover;" />
 
-  <img src="./screenshots/home.png" alt="Collection Page" width="45%" height="250px" style="margin: 20px; object-fit: cover;" />
-  <img src="./screenshots/profile.png" alt="Admin Page" width="45%" height="250px" style="margin: 20px; object-fit: cover;" />
+  <img src="./screenshots/home.png" alt="Home Page" width="45%" height="250px" style="margin: 20px; object-fit: cover;" />
+  <img src="./screenshots/profile.png" alt="Profile Page" width="45%" height="250px" style="margin: 20px; object-fit: cover;" />
 </p>
+
 
